@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "mapbox-gl/dist/mapbox-gl.css";
+
+body {
+  background: #060D1B;
+  color: #E2E8F0;
+  overflow: hidden;
+}
+
+/* Anomaly point pulse animation */
+@keyframes anomaly-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(239, 68, 68, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+/* Mapbox overrides for dark theme */
+.mapboxgl-popup-content {
+  background: #0F172A !important;
+  color: #E2E8F0 !important;
+  border: 0.5px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 8px !important;
+  padding: 12px !important;
+  font-size: 12px !important;
+}
+
+.mapboxgl-popup-tip {
+  border-top-color: #0F172A !important;
+}
+
+.mapboxgl-ctrl-attrib {
+  display: none !important;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #1E293B;
+  border-radius: 2px;
+}

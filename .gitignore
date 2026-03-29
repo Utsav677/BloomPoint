@@ -1,0 +1,15 @@
+node_modules/
+.next/
+out/
+__pycache__/
+*.pyc
+venv/
+.env
+.env.local
+data/chroma_db/
+data/cache/*.csv
+.DS_Store
+*.egg-info/
+dist/
+build/
+.claude/settings.local.json
