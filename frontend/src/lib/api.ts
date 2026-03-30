@@ -138,6 +138,68 @@ export async function fetchReport(event: AnomalyEvent): Promise<CommunityReport>
   return data;
 }
 
+// === Validation types ===
+
+export interface ValidationConfusionMatrix {
+  true_positive: number;
+  false_negative: number;
+  true_negative: number;
+  false_positive: number;
+}
+
+export interface ValidationMetrics {
+  accuracy: number;
+  precision: number;
+  recall: number;
+  f1_score: number;
+}
+
+export interface ValidationDetail {
+  name: string;
+  date: string;
+  lat: number;
+  lon: number;
+  expected: "bloom" | "clean";
+  detected: "yes" | "no";
+  severity: string;
+  max_z_score: number;
+  max_chl_a: number;
+  data_points: number;
+  passed: boolean;
+  error: string | null;
+}
+
+export interface ValidationFalseNegative {
+  event: string;
+  explanation: string;
+}
+
+export interface ValidationResults {
+  confusion_matrix: ValidationConfusionMatrix;
+  metrics: ValidationMetrics;
+  details: ValidationDetail[];
+  false_negatives: ValidationFalseNegative[];
+  total_events: number;
+  elapsed_seconds: number;
+  run_at: string;
+}
+
+export async function runValidation(): Promise<ValidationResults> {
+  console.log("[API] GET /api/validate/run (this may take several minutes)");
+  const res = await fetch(`${API_BASE}/api/validate/run`, { signal: AbortSignal.timeout(600000) });
+  if (!res.ok) throw new Error(`Validation failed: ${res.status}`);
+  const data: ValidationResults = await res.json();
+  console.log("[API] /api/validate/run →", data.metrics);
+  return data;
+}
+
+export async function fetchValidationResults(): Promise<ValidationResults> {
+  const res = await fetch(`${API_BASE}/api/validate/results`);
+  if (!res.ok) throw new Error(`No cached results: ${res.status}`);
+  const data: ValidationResults = await res.json();
+  return data;
+}
+
 export async function searchLocation(
   query: string,
   lat: number,

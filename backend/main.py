@@ -489,6 +489,29 @@ def get_anomalies(lat: float = Query(...), lon: float = Query(...)):
 report_cache: dict = {}
 
 
+# --- Validation ---
+
+@app.get("/api/validate/run")
+def run_validation_suite():
+    """Run the full validation suite against documented real-world events."""
+    from validation import run_validation
+    logger.info("[API] Starting validation suite...")
+    results = run_validation()
+    logger.info("[API] Validation complete: accuracy=%.2f, F1=%.2f",
+                results["metrics"]["accuracy"], results["metrics"]["f1_score"])
+    return results
+
+
+@app.get("/api/validate/results")
+def get_validation_results():
+    """Return cached results from the last validation run."""
+    from validation import get_cached_results
+    cached = get_cached_results()
+    if cached is None:
+        raise HTTPException(status_code=404, detail="No validation results cached. Run /api/validate/run first.")
+    return cached
+
+
 @app.post("/api/report")
 def generate_report(event: AnomalyEvent):
     cache_key = f"{event.region_id}_{event.date}_{event.lat}_{event.lon}"

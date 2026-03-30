@@ -19,6 +19,7 @@ import type {
   AnomalyEvent,
   CommunityReport,
 } from "@/lib/api";
+import { ValidationModal } from "@/components/ValidationModal";
 
 export default function Dashboard() {
   const [currentRegion, setCurrentRegion] = useState<Region | null>(null);
@@ -30,6 +31,7 @@ export default function Dashboard() {
   const [scanActive, setScanActive] = useState(false);
   const [recentSearches, setRecentSearches] = useState<RecentRegion[]>([]);
   const [dataLoading, setDataLoading] = useState(false);
+  const [showValidation, setShowValidation] = useState(false);
 
   useEffect(() => {
     fetchRecent().then(setRecentSearches).catch(() => {});
@@ -211,7 +213,7 @@ export default function Dashboard() {
       </div>
 
       {/* Footer: Stats bar */}
-      <footer className="flex justify-center gap-8 py-2.5 border-t border-white/[0.04] bg-black/[0.15] shrink-0">
+      <footer className="flex justify-center items-center gap-8 py-2.5 border-t border-white/[0.04] bg-black/[0.15] shrink-0">
         {[
           { value: String(alertCount), label: "anomalies detected", color: "text-tp-accent" },
           { value: String(recentSearches.length), label: "water bodies scanned", color: "text-tp-text-primary" },
@@ -227,7 +229,18 @@ export default function Dashboard() {
             </div>
           </div>
         ))}
+        <button
+          onClick={() => setShowValidation(true)}
+          className="ml-4 px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-tp-text-secondary text-[11px] font-mono uppercase tracking-wider hover:bg-white/[0.08] hover:border-tp-accent/30 hover:text-tp-accent transition"
+        >
+          Validation
+        </button>
       </footer>
+
+      {/* Validation modal */}
+      {showValidation && (
+        <ValidationModal onClose={() => setShowValidation(false)} />
+      )}
     </div>
   );
 }
